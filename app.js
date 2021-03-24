@@ -14,10 +14,9 @@ var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 require('dotenv').config()
 
-
-var client_id = process.env.CLIENT_ID // Your client id
-var client_secret = process.env.CLIENT_SECRET // Your secret
-var redirect_uri = process.env.REDIRECT_URI // Your redirect uri
+var client_id = '0fa66779f7fc456688e69f972f27dcb4' // Your client id
+var client_secret = 'df19272eec694647b3531d8be0dfed8c' // Your secret
+var redirect_uri = 'https://spotify-playlist-to-json.herokuapp.com/callback' // Your redirect uri
 
 /**
  * Generates a random string containing numbers and letters
