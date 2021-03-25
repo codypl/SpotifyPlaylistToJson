@@ -1,6 +1,5 @@
-(function() {
-
-    /**
+$( document ).ready(function() {
+   /**
      * Obtains parameters from the hash of the URL
      * @return Object
      */
@@ -14,16 +13,9 @@
       return hashParams;
     }
 
-    var playlistList = document.getElementById('user-playlists');
-
-    var userProfileSource = document.getElementById('user-profile-template').innerHTML,
-        userProfileTemplate = Handlebars.compile(userProfileSource),
-        userProfilePlaceholder = document.getElementById('user-profile');
-
     var params = getHashParams();
 
     var access_token = params.access_token,
-        refresh_token = params.refresh_token,
         error = params.error;
 
     if (error) {
@@ -37,10 +29,6 @@
               'Authorization': 'Bearer ' + access_token
             },
             success: function(response) {
-              userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-
-              console.log(response)
-
               $('#login').hide();
               $('#loggedin').show();
             }
@@ -55,10 +43,11 @@
               //On parcourt les playlists
               for (let playlist of response.items) {
                   let containerPlaylist = document.createElement("div");
-                  containerPlaylist.classList.add('m-2', 'pe-2', 'border', 'flex-fill');
+                  containerPlaylist.classList.add('playlist', 'm-2', 'pe-2', 'border', 'flex-fill');
                   document.getElementById('user-playlists').appendChild(containerPlaylist);
 
                   let btnPlaylist = document.createElement("a");
+                  btnPlaylist.setAttribute("rel", "noopener");
                   let idPlaylist = playlist.id
                   let namePlaylist = playlist.name
                   btnPlaylist.setAttribute("id", idPlaylist);
@@ -71,11 +60,16 @@
                     },
                     success: function(resp) {
 
+                      console.log(resp)
+
                       let coverPlaylist = document.createElement("img");
-                      coverPlaylist.setAttribute("width", "75");
-                      coverPlaylist.setAttribute("height", "75");
+                      coverPlaylist.setAttribute("width", "60");
+                      coverPlaylist.setAttribute("height", "60");
+                      coverPlaylist.setAttribute("alt", "Playlist cover of " + namePlaylist);
                       coverPlaylist.classList.add('me-2');
-                      if(JSON.parse(resp)[0] != null) {
+                      if(JSON.parse(resp)[2] != null) {
+                        coverPlaylist.setAttribute("src", JSON.parse(resp)[2].url);
+                      } else if(JSON.parse(resp)[0] != null) {
                         coverPlaylist.setAttribute("src", JSON.parse(resp)[0].url);
                       }
                       containerPlaylist.appendChild(coverPlaylist);
@@ -109,19 +103,5 @@
           $('#loggedin').hide();
       }
 
-      // document.getElementById('obtain-new-token').addEventListener('click', function() {
-      //   $.ajax({
-      //     url: '/refresh_token',
-      //     data: {
-      //       'refresh_token': refresh_token
-      //     }
-      //   }).done(function(data) {
-      //     access_token = data.access_token;
-      //     oauthPlaceholder.innerHTML = oauthTemplate({
-      //       access_token: access_token,
-      //       refresh_token: refresh_token
-      //     });
-      //   });
-      // }, false);
     }
-  })();
+});
